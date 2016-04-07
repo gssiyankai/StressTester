@@ -1,5 +1,5 @@
 package com.gregory.testing.strategy;
 
 public enum TestingStrategy {
-    INCREMENTAL_LOAD, STRESS
+    CONSTANT_LOAD, INCREMENTAL_LOAD, STRESS
 }
