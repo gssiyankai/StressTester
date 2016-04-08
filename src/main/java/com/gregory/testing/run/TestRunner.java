@@ -19,11 +19,10 @@ public final class TestRunner {
         this.testCase = testCase;
     }
 
-    public void run() throws Exception {
+    public List<TestResult> run() throws Exception {
         switch (testCase.strategy()) {
             case CONSTANT_LOAD:
-                runConstantLoad();
-                break;
+                return runConstantLoad();
             default:
                 throw new RuntimeException("Strategy " + testCase.strategy().name() + " is not supported yet!");
         }
