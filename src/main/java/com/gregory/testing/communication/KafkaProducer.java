@@ -1,13 +1,14 @@
 package com.gregory.testing.communication;
 
 import com.gregory.testing.message.Message;
+import com.gregory.testing.message.TimestampedMessage;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.util.Properties;
 
-public class KafkaProducer implements Channel {
+public class KafkaProducer implements InputChannel {
 
     private final String broker;
     private final String topic;
@@ -17,7 +18,8 @@ public class KafkaProducer implements Channel {
         this.topic = topic;
     }
 
-    public long sendMessaage(Message message) {
+    @Override
+    public TimestampedMessage sendMessaage(Message message) {
         Properties properties = new Properties();
         properties.setProperty("bootstrap.servers", broker);
         properties.setProperty("acks", "1");
@@ -26,7 +28,7 @@ public class KafkaProducer implements Channel {
         final ProducerRecord<String, byte[]> record = new ProducerRecord<>(topic, message.data());
         long timestamp = System.currentTimeMillis();
         producer.send(record);
-        return timestamp;
+        return new TimestampedMessage(timestamp, message);
     }
 
 }

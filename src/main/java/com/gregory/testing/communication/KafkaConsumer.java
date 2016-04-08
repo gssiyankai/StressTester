@@ -14,7 +14,7 @@ import java.util.Properties;
 
 import static kafka.consumer.Consumer.createJavaConsumerConnector;
 
-public class KafkaConsumer implements Channel {
+public class KafkaConsumer implements OutputChannel {
 
     private final String zookeeper;
     private final String topic;
@@ -24,6 +24,7 @@ public class KafkaConsumer implements Channel {
         this.topic = topic;
     }
 
+    @Override
     public TimestampedMessage getMessage() {
         Properties properties = new Properties();
         properties.setProperty("group.id", "kafka-consumer");

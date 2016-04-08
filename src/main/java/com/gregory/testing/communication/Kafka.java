@@ -1,10 +1,10 @@
 package com.gregory.testing.communication;
 
-abstract class Kafka implements Channel {
+abstract class Kafka {
 
     private final String topic;
 
-    public Kafka(String topic) {
+    Kafka(String topic) {
         this.topic = topic;
     }
 
