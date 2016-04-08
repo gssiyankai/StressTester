@@ -1,6 +1,6 @@
 package com.gregory.testing.message;
 
-public class Message {
+public final class Message {
 
     private final byte[] data;
 

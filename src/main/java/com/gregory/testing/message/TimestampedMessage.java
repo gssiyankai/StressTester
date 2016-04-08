@@ -1,6 +1,6 @@
 package com.gregory.testing.message;
 
-public class TimestampedMessage {
+public final class TimestampedMessage {
 
     private final long timestamp;
     private final Message message;
