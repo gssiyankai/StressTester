@@ -30,11 +30,13 @@ public final class BatchTask implements Callable<BatchResult> {
         List<TimestampedMessage> requests = new ArrayList<>(messages.size());
         List<TimestampedMessage> responses = new ArrayList<>(messages.size());
         for (Message message : messages) {
+            System.out.println("Sending: " + new String(message.data()));
             TimestampedMessage request = input.sendMessage(message);
             requests.add(request);
         }
         for (int i = 0; i < messages.size(); i++) {
             TimestampedMessage response = output.getMessage();
+            System.out.println("Received: " + new String(response.message().data()));
             responses.add(response);
         }
         return new BatchResult(id, requests, responses);
