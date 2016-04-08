@@ -11,7 +11,10 @@ import java.util.List;
 
 public final class Logger {
 
-    public void saveAsCsv(String path, String separator, List<TestResult> results) throws IOException {
+    private Logger() {
+    }
+
+    public static void saveAsCsv(String path, String separator, List<TestResult> results) throws IOException {
         try(FileWriter fw = new FileWriter(path);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter out = new PrintWriter(bw)) {
