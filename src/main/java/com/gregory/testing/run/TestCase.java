@@ -18,4 +18,16 @@ public class TestCase {
         this.strategy = strategy;
     }
 
+    public Server server() {
+        return server;
+    }
+
+    public List<Message> messages() {
+        return messages;
+    }
+
+    public TestingStrategy strategy() {
+        return strategy;
+    }
+
 }
