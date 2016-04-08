@@ -1,13 +1,10 @@
 package com.gregory.testing.run;
 
+import com.google.common.collect.Lists;
 import com.gregory.testing.application.Server;
-import com.gregory.testing.communication.InputChannel;
-import com.gregory.testing.communication.OutputChannel;
 import com.gregory.testing.message.Message;
-import com.gregory.testing.message.TimestampedMessage;
-import com.gregory.testing.result.TestResult;
+import com.gregory.testing.result.BatchResult;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +16,7 @@ public final class TestRunner {
         this.testCase = testCase;
     }
 
-    public List<TestResult> run() throws Exception {
+    public List<BatchResult> run() throws Exception {
         switch (testCase.strategy()) {
             case CONSTANT_LOAD:
                 return runConstantLoad();
@@ -28,15 +25,15 @@ public final class TestRunner {
         }
     }
 
-    private List<TestResult> runConstantLoad() throws IOException {
-        List<TestResult> results = new ArrayList<>();
+    private List<BatchResult> runConstantLoad() throws Exception {
+        int batchSize = testCase.initialBatchSize();
         Server server = testCase.server();
-        InputChannel input = server.input();
-        OutputChannel output = server.output();
-        for (Message message : testCase.messages()) {
-            TimestampedMessage request = input.sendMessaage(message);
-            TimestampedMessage response = output.getMessage();
-            results.add(new TestResult(request, response));
+        List<Message> messages = testCase.messages();
+        List<BatchResult> results = new ArrayList<>();
+        int batchId = 0;
+        for (List<Message> batchMessages : Lists.partition(messages, batchSize)) {
+            BatchTask task = new BatchTask(batchId++, server, batchMessages);
+            results.add(task.call());
         }
         return results;
     }

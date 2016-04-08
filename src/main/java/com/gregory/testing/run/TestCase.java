@@ -6,16 +6,18 @@ import com.gregory.testing.strategy.TestingStrategy;
 
 import java.util.List;
 
-public class TestCase {
+public final class TestCase {
 
     private final Server server;
     private final List<Message> messages;
     private final TestingStrategy strategy;
+    private final int initialBatchSize;
 
-    public TestCase(Server server, List<Message> messages, TestingStrategy strategy) {
+    public TestCase(Server server, List<Message> messages, TestingStrategy strategy, int initialBatchSize) {
         this.server = server;
         this.messages = messages;
         this.strategy = strategy;
+        this.initialBatchSize = initialBatchSize;
     }
 
     public Server server() {
@@ -28,6 +30,10 @@ public class TestCase {
 
     public TestingStrategy strategy() {
         return strategy;
+    }
+
+    public int initialBatchSize() {
+        return initialBatchSize;
     }
 
 }
