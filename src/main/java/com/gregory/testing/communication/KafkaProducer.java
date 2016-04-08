@@ -19,7 +19,7 @@ public final class KafkaProducer implements InputChannel {
     }
 
     @Override
-    public TimestampedMessage sendMessaage(Message message) {
+    public TimestampedMessage sendMessage(Message message) {
         Properties properties = new Properties();
         properties.setProperty("bootstrap.servers", broker);
         properties.setProperty("acks", "1");

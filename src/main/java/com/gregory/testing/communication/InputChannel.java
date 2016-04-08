@@ -4,5 +4,5 @@ import com.gregory.testing.message.Message;
 import com.gregory.testing.message.TimestampedMessage;
 
 public interface InputChannel {
-    TimestampedMessage sendMessaage(Message message);
+    TimestampedMessage sendMessage(Message message);
 }
