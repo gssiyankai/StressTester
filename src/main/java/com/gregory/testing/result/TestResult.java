@@ -2,12 +2,12 @@ package com.gregory.testing.result;
 
 import com.gregory.testing.message.TimestampedMessage;
 
-public final class Result {
+public final class TestResult {
 
     private final TimestampedMessage request;
     private final TimestampedMessage response;
 
-    public Result(TimestampedMessage request, TimestampedMessage response) {
+    public TestResult(TimestampedMessage request, TimestampedMessage response) {
         this.request = request;
         this.response = response;
     }

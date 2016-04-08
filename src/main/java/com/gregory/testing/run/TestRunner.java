@@ -5,7 +5,7 @@ import com.gregory.testing.communication.InputChannel;
 import com.gregory.testing.communication.OutputChannel;
 import com.gregory.testing.message.Message;
 import com.gregory.testing.message.TimestampedMessage;
-import com.gregory.testing.result.Result;
+import com.gregory.testing.result.TestResult;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,16 +29,17 @@ public final class TestRunner {
         }
     }
 
-    private void runConstantLoad() throws IOException {
-        List<Result> results = new ArrayList<>();
+    private List<TestResult> runConstantLoad() throws IOException {
+        List<TestResult> results = new ArrayList<>();
         Server server = testCase.server();
         InputChannel input = server.input();
         OutputChannel output = server.output();
         for (Message message : testCase.messages()) {
             TimestampedMessage request = input.sendMessaage(message);
             TimestampedMessage response = output.getMessage();
-            results.add(new Result(request, response));
+            results.add(new TestResult(request, response));
         }
+        return results;
     }
 
 }
