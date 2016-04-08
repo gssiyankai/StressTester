@@ -9,4 +9,13 @@ public class TimestampedMessage {
         this.timestamp = timestamp;
         this.message = message;
     }
+
+    public long timestamp() {
+        return timestamp;
+    }
+
+    public Message message() {
+        return message;
+    }
+
 }
