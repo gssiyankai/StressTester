@@ -10,6 +10,9 @@ import java.util.Scanner;
 
 public final class LocalFileSystem {
 
+    private LocalFileSystem() {
+    }
+
     public static List<Message> messagesFromPath(String path) throws FileNotFoundException {
         List<Message> messages = new ArrayList<>();
         File file = new File(path);
