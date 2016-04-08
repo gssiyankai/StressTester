@@ -14,7 +14,7 @@ import java.util.Properties;
 
 import static kafka.consumer.Consumer.createJavaConsumerConnector;
 
-public class KafkaConsumer implements OutputChannel {
+public final class KafkaConsumer implements OutputChannel {
 
     private final String zookeeper;
     private final String topic;

@@ -8,7 +8,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 
 import java.util.Properties;
 
-public class KafkaProducer implements InputChannel {
+public final class KafkaProducer implements InputChannel {
 
     private final String broker;
     private final String topic;
