@@ -78,6 +78,7 @@
 
     <properties>
         <kafka.version>0.8.2.2</kafka.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
