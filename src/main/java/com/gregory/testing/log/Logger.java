@@ -1,11 +1,15 @@
 package com.gregory.testing.log;
 
-import com.google.common.base.Joiner;
 import com.gregory.testing.message.TimestampedMessage;
 import com.gregory.testing.result.BatchResult;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
+
+import static com.gregory.testing.utils.Utils.join;
 
 public final class Logger {
 
@@ -30,8 +34,7 @@ public final class Logger {
     }
 
     private static String messageToRow(int batchId, String messageType, TimestampedMessage message, String separator) {
-        return Joiner.on(separator)
-                .join(batchId, messageType, new String(message.message().data()));
+        return join(separator, batchId, messageType, new String(message.message().data()));
     }
 
 }
