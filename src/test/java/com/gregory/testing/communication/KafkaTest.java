@@ -1,5 +1,6 @@
 package com.gregory.testing.communication;
 
+import com.gregory.testing.message.Message;
 import com.gregory.testing.message.TimestampedMessage;
 import info.batey.kafka.unit.KafkaUnit;
 import kafka.producer.KeyedMessage;
@@ -7,9 +8,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+import java.util.concurrent.TimeoutException;
+
 import static org.fest.assertions.Assertions.assertThat;
 
-public final class KafkaConsumerTest {
+public class KafkaTest {
 
     private static final String zookeeper = "localhost:5000";
     private static final String broker = "localhost:5001";
@@ -38,6 +42,15 @@ public final class KafkaConsumerTest {
         TimestampedMessage message = consumer.getMessage();
         assertThat(message.timestamp()).isGreaterThan(startTimestamp);
         assertThat(message.message().data()).isEqualTo("value".getBytes());
+    }
+
+    @Test
+    public void it_should_write_messages_to_kafka() throws InterruptedException, TimeoutException {
+        KafkaProducer producer = new KafkaProducer(broker, topic);
+        Thread.sleep(1000);
+        producer.sendMessage(new Message("foo".getBytes()));
+        List<String> messages = kafka.readMessages(topic, 1);
+        assertThat(messages).containsExactly("foo");
     }
 
 }
