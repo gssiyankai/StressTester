@@ -31,7 +31,7 @@ public final class KafkaConsumerTest {
     @Test
     public void it_should_read_messages_from_kafka() {
         long startTimestamp = System.currentTimeMillis();
-        KafkaConsumer consumer = new KafkaConsumer(zookeeper, broker);
+        KafkaConsumer consumer = new KafkaConsumer(zookeeper, topic);
         KeyedMessage<String, String> keyedMessage = new KeyedMessage<>(topic, "key", "value");
         kafka.sendMessages(keyedMessage);
         TimestampedMessage message = consumer.getMessage();

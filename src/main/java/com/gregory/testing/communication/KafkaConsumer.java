@@ -18,14 +18,12 @@ public final class KafkaConsumer implements OutputChannel {
 
     private final String zookeeper;
     private final String topic;
+    private final KafkaStream<byte[], byte[]> stream;
 
     public KafkaConsumer(String zookeeper, String topic) {
         this.zookeeper = zookeeper;
         this.topic = topic;
-    }
 
-    @Override
-    public TimestampedMessage getMessage() {
         Properties properties = new Properties();
         properties.setProperty("group.id", "kafka-consumer");
         properties.setProperty("zookeeper.connect", zookeeper);
@@ -34,8 +32,11 @@ public final class KafkaConsumer implements OutputChannel {
         Map<String, Integer> topicCountMap = new HashMap<>();
         topicCountMap.put(topic, 1);
         Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = connector.createMessageStreams(topicCountMap);
+        stream = consumerMap.get(topic).get(0);
+    }
 
-        final KafkaStream<byte[], byte[]> stream = consumerMap.get(topic).get(0);
+    @Override
+    public TimestampedMessage getMessage() {
         ConsumerIterator<byte[], byte[]> iterator = stream.iterator();
         if (iterator.hasNext()) {
             byte[] message = iterator.next().message();
