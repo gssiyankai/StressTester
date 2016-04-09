@@ -29,9 +29,10 @@ public final class KafkaConsumerTest {
     }
 
     @Test
-    public void it_should_read_messages_from_kafka() {
+    public void it_should_read_messages_from_kafka() throws InterruptedException {
         long startTimestamp = System.currentTimeMillis();
         KafkaConsumer consumer = new KafkaConsumer(zookeeper, topic);
+        Thread.sleep(1000);
         KeyedMessage<String, String> keyedMessage = new KeyedMessage<>(topic, "key", "value");
         kafka.sendMessages(keyedMessage);
         TimestampedMessage message = consumer.getMessage();
