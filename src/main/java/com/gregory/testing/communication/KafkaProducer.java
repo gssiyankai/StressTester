@@ -22,7 +22,6 @@ public final class KafkaProducer implements InputChannel {
     public TimestampedMessage sendMessage(Message message) {
         Properties properties = new Properties();
         properties.setProperty("bootstrap.servers", broker);
-        properties.setProperty("acks", "1");
         org.apache.kafka.clients.producer.KafkaProducer<String, byte[]> producer =
                 new org.apache.kafka.clients.producer.KafkaProducer<>(properties, new StringSerializer(), new ByteArraySerializer());
         final ProducerRecord<String, byte[]> record = new ProducerRecord<>(topic, message.data());

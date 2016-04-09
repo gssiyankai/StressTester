@@ -29,11 +29,6 @@ public final class KafkaConsumer implements OutputChannel {
         Properties properties = new Properties();
         properties.setProperty("group.id", "kafka-consumer");
         properties.setProperty("zookeeper.connect", zookeeper);
-        properties.setProperty("zookeeper.session.timeout.ms", "10000");
-        properties.setProperty("zookeeper.sync.time.ms", "200");
-        properties.setProperty("auto.commit.interval.ms", "1000");
-        properties.setProperty("serializer.class", "kafka.serializer.DefaultEncoder");
-        properties.setProperty("key.serializer.class", "kafka.serializer.StringEncoder");
 
         ConsumerConnector connector = createJavaConsumerConnector(new ConsumerConfig(properties));
         Map<String, Integer> topicCountMap = new HashMap<>();
