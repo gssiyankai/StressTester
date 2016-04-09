@@ -7,6 +7,7 @@ import com.gregory.testing.result.BatchResult;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public final class TestRunner {
 
@@ -16,7 +17,7 @@ public final class TestRunner {
         this.testCase = testCase;
     }
 
-    public List<BatchResult> run() {
+    public List<BatchResult> run() throws ExecutionException, InterruptedException {
         switch (testCase.strategy()) {
             case CONSTANT_LOAD:
                 return runConstantLoad();
@@ -29,7 +30,7 @@ public final class TestRunner {
         }
     }
 
-    private List<BatchResult> runConstantLoad() {
+    private List<BatchResult> runConstantLoad() throws ExecutionException, InterruptedException {
         int batchSize = testCase.initialBatchSize();
         Server server = testCase.server();
         List<Message> messages = testCase.messages();
@@ -45,7 +46,7 @@ public final class TestRunner {
         return results;
     }
 
-    private List<BatchResult> runIncrementalLoad() {
+    private List<BatchResult> runIncrementalLoad() throws ExecutionException, InterruptedException {
         int batchSize = testCase.initialBatchSize();
         Server server = testCase.server();
         List<Message> messages = testCase.messages();
@@ -62,7 +63,7 @@ public final class TestRunner {
         return results;
     }
 
-    private List<BatchResult> runStressLoad() {
+    private List<BatchResult> runStressLoad() throws ExecutionException, InterruptedException {
         Server server = testCase.server();
         List<Message> messages = testCase.messages();
         BatchTask task = new BatchTask(0, server, messages);

@@ -9,8 +9,11 @@ import com.gregory.testing.result.BatchResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.*;
 
 public final class BatchTask {
+
+    private final static ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(2);
 
     private final int id;
     private final Server server;
@@ -22,22 +25,16 @@ public final class BatchTask {
         this.messages = messages;
     }
 
-    public BatchResult run() {
+    public BatchResult run() throws ExecutionException, InterruptedException {
         InputChannel input = server.input();
         OutputChannel output = server.output();
-        List<TimestampedMessage> requests = new ArrayList<>(messages.size());
-        List<TimestampedMessage> responses = new ArrayList<>(messages.size());
-        for (Message message : messages) {
-            System.out.println("Sending: " + new String(message.data()));
-            TimestampedMessage request = input.sendMessage(message);
-            requests.add(request);
-        }
-        for (int i = 0; i < messages.size(); i++) {
-            TimestampedMessage response = output.getMessage();
-            System.out.println("Received: " + new String(response.message().data()));
-            responses.add(response);
-        }
-        return new BatchResult(id, requests, responses);
+        BatchProducer producer = new BatchProducer(input, messages);
+        BatchConsumer consumer = new BatchConsumer(output, messages.size());
+
+        Future<List<TimestampedMessage>> responses = EXECUTOR_SERVICE.submit(consumer);
+        Future<List<TimestampedMessage>> requests = EXECUTOR_SERVICE.submit(producer);
+
+        return new BatchResult(id, requests.get(), responses.get());
     }
 
 }
