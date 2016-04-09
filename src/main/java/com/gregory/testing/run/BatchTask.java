@@ -9,9 +9,8 @@ import com.gregory.testing.result.BatchResult;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
-public final class BatchTask implements Callable<BatchResult> {
+public final class BatchTask {
 
     private final int id;
     private final Server server;
@@ -23,8 +22,7 @@ public final class BatchTask implements Callable<BatchResult> {
         this.messages = messages;
     }
 
-    @Override
-    public BatchResult call() throws Exception {
+    public BatchResult run() {
         InputChannel input = server.input();
         OutputChannel output = server.output();
         List<TimestampedMessage> requests = new ArrayList<>(messages.size());
