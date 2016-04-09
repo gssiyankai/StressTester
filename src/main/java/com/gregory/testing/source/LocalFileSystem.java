@@ -31,7 +31,7 @@ public final class LocalFileSystem {
         return messages;
     }
 
-    public static List<Message> messagesFromPath(String... paths) throws FileNotFoundException {
+    public static List<Message> messagesFromPaths(String... paths) throws FileNotFoundException {
         List<Message> messages = new ArrayList<>();
         for (String path : paths) {
             messages.addAll(messagesFromPath(path));
