@@ -42,7 +42,7 @@ public final class KafkaConsumer implements OutputChannel {
 
         final KafkaStream<byte[], byte[]> stream = consumerMap.get(topic).get(0);
         ConsumerIterator<byte[], byte[]> iterator = stream.iterator();
-        if(iterator.hasNext()) {
+        if (iterator.hasNext()) {
             byte[] message = iterator.next().message();
             long timestamp = System.currentTimeMillis();
             return new TimestampedMessage(timestamp, new Message(message));

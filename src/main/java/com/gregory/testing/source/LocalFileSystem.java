@@ -16,7 +16,7 @@ public final class LocalFileSystem {
     public static List<Message> messagesFromPath(String path) throws FileNotFoundException {
         List<Message> messages = new ArrayList<>();
         File file = new File(path);
-        if(file.isDirectory()) {
+        if (file.isDirectory()) {
             for (File f : file.listFiles()) {
                 messages.addAll(messagesFromPath(f.getPath()));
             }
