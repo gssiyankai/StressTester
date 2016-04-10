@@ -10,12 +10,12 @@ import static org.fest.assertions.Assertions.assertThat;
 public final class FileUtilsTest {
 
     @Test
-    public void it_should_read_resource_file() {
+    public void it_should_read_resource_file() throws Exception {
         assertThat(FileUtils.readResourceLines("messages2/third.txt")).isEqualTo("Yo!");
     }
 
     @Test
-    public void it_should_write_file() {
+    public void it_should_write_file() throws Exception {
         String path = "target/FileUtilsTest/dummy.txt";
         writeToFile(path, "bar");
         assertThat(new File(path)).exists();

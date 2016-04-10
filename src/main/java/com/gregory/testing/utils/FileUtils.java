@@ -15,23 +15,17 @@ public final class FileUtils {
     private FileUtils() {
     }
 
-    public static String readResourceLines(String path) {
-        try {
-            Path templatePath = Paths.get(FileUtils.class.getResource("/" + path).toURI());
-            List<String> lines = Files.readAllLines(templatePath, Charset.defaultCharset());
-            return join("\n", (List) lines);
-        } catch (URISyntaxException | IOException e) {
-            throw new RuntimeException(e);
-        }
+    public static String readResourceLines(String path) throws URISyntaxException, IOException {
+        Path templatePath = Paths.get(FileUtils.class.getResource("/" + path).toURI());
+        List<String> lines = Files.readAllLines(templatePath, Charset.defaultCharset());
+        return join("\n", (List) lines);
     }
 
-    public static void writeToFile(String path, String content) {
+    public static void writeToFile(String path, String content) throws IOException {
         File file = new File(path);
         file.getParentFile().mkdirs();
         try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file)))) {
             writer.write(content);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
