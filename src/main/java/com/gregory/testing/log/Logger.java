@@ -2,6 +2,7 @@ package com.gregory.testing.log;
 
 import com.gregory.testing.message.TimestampedMessage;
 import com.gregory.testing.result.BatchResult;
+import com.gregory.testing.result.RunResult;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,15 +18,19 @@ public final class Logger {
     public static void saveAsCsv(String path, String separator, List<BatchResult> results) throws IOException {
         StringBuilder builder = new StringBuilder();
         for (BatchResult result : results) {
-            List<TimestampedMessage> requests = result.requests();
-            for (TimestampedMessage request : requests) {
-                builder.append(messageToRow(result.batchId(), result.runId(), "request", request, separator));
-                builder.append("\n");
-            }
-            List<TimestampedMessage> responses = result.responses();
-            for (TimestampedMessage response : responses) {
-                builder.append(messageToRow(result.batchId(), result.runId(), "response", response, separator));
-                builder.append("\n");
+            int batchId = result.batchId();
+            for (RunResult runResult : result.runs()) {
+                int runId = runResult.runId();
+                List<TimestampedMessage> requests = runResult.requests();
+                for (TimestampedMessage request : requests) {
+                    builder.append(messageToRow(batchId, runId, "request", request, separator));
+                    builder.append("\n");
+                }
+                List<TimestampedMessage> responses = runResult.responses();
+                for (TimestampedMessage response : responses) {
+                    builder.append(messageToRow(batchId, runId, "response", response, separator));
+                    builder.append("\n");
+                }
             }
         }
         writeToFile(path, builder.toString());

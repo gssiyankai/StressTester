@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class BatchProducerTest {
+public class ProducerTest {
 
     @Test
     public void it_should_send_messages() throws Exception {
@@ -23,7 +23,7 @@ public class BatchProducerTest {
             }
         };
         List<Message> messages = Collections.singletonList(new Message("hello".getBytes()));
-        BatchProducer producer = new BatchProducer(input, messages);
+        Producer producer = new Producer(input, messages);
         producer.call();
         Assertions.assertThat(sentMessages).isEqualTo(messages);
     }

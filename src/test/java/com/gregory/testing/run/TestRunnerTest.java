@@ -50,18 +50,13 @@ public class TestRunnerTest {
         TestRunner runner = new TestRunner(testCase);
         List<BatchResult> results = runner.run();
         assertThat(results).hasSize(6);
-        assertThat(results.get(0).requests()).hasSize(1);
-        assertThat(results.get(0).responses()).hasSize(1);
-        assertThat(results.get(1).requests()).hasSize(1);
-        assertThat(results.get(1).responses()).hasSize(1);
-        assertThat(results.get(2).requests()).hasSize(1);
-        assertThat(results.get(2).responses()).hasSize(1);
-        assertThat(results.get(3).requests()).hasSize(1);
-        assertThat(results.get(3).responses()).hasSize(1);
-        assertThat(results.get(4).requests()).hasSize(1);
-        assertThat(results.get(4).responses()).hasSize(1);
-        assertThat(results.get(5).requests()).hasSize(1);
-        assertThat(results.get(5).responses()).hasSize(1);
+        for (int i = 0; i < 6; i++) {
+            assertThat(results.get(i).batchId()).isEqualTo(i);
+            assertThat(results.get(i).runs()).hasSize(1);
+            assertThat(results.get(i).runs().get(0).runId()).isEqualTo(0);
+            assertThat(results.get(i).runs().get(0).requests()).hasSize(1);
+            assertThat(results.get(i).runs().get(0).responses()).hasSize(1);
+        }
     }
 
     @Test
@@ -70,12 +65,13 @@ public class TestRunnerTest {
         TestRunner runner = new TestRunner(testCase);
         List<BatchResult> results = runner.run();
         assertThat(results).hasSize(3);
-        assertThat(results.get(0).requests()).hasSize(1);
-        assertThat(results.get(0).responses()).hasSize(1);
-        assertThat(results.get(1).requests()).hasSize(2);
-        assertThat(results.get(1).responses()).hasSize(2);
-        assertThat(results.get(2).requests()).hasSize(3);
-        assertThat(results.get(2).responses()).hasSize(3);
+        for (int i = 0; i < 3; i++) {
+            assertThat(results.get(i).batchId()).isEqualTo(i);
+            assertThat(results.get(i).runs()).hasSize(1);
+            assertThat(results.get(i).runs().get(0).runId()).isEqualTo(0);
+            assertThat(results.get(i).runs().get(0).requests()).hasSize(i + 1);
+            assertThat(results.get(i).runs().get(0).responses()).hasSize(i + 1);
+        }
     }
 
     @Test
@@ -85,8 +81,11 @@ public class TestRunnerTest {
         TestRunner runner = new TestRunner(testCase);
         List<BatchResult> results = runner.run();
         assertThat(results).hasSize(1);
-        assertThat(results.get(0).requests()).hasSize(6);
-        assertThat(results.get(0).responses()).hasSize(6);
+        assertThat(results.get(0).batchId()).isEqualTo(0);
+        assertThat(results.get(0).runs()).hasSize(1);
+        assertThat(results.get(0).runs().get(0).runId()).isEqualTo(0);
+        assertThat(results.get(0).runs().get(0).requests()).hasSize(6);
+        assertThat(results.get(0).runs().get(0).responses()).hasSize(6);
     }
 
 }

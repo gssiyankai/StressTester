@@ -9,7 +9,7 @@ import org.junit.Test;
 import java.util.Collections;
 import java.util.List;
 
-public class BatchConsumerTest {
+public class ConsumerTest {
 
     @Test
     public void it_should_receive_messages() throws Exception {
@@ -22,7 +22,7 @@ public class BatchConsumerTest {
                 return messages.get(0);
             }
         };
-        BatchConsumer consumer = new BatchConsumer(output, 1);
+        Consumer consumer = new Consumer(output, 1);
         List<TimestampedMessage> receivedMessages = consumer.call();
         Assertions.assertThat(receivedMessages).isEqualTo(messages);
     }

@@ -5,7 +5,7 @@ import com.gregory.testing.communication.InputChannel;
 import com.gregory.testing.communication.OutputChannel;
 import com.gregory.testing.message.Message;
 import com.gregory.testing.message.TimestampedMessage;
-import com.gregory.testing.result.BatchResult;
+import com.gregory.testing.result.RunResult;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutionException;
 
 import static org.fest.assertions.Assertions.assertThat;
 
-public class BatchTaskTest {
+public class TaskTest {
 
     @Test
     public void it_should_send_a_request_and_get_a_reponse() throws ExecutionException, InterruptedException {
@@ -34,9 +34,8 @@ public class BatchTaskTest {
             }
         };
         Server server = new Server("server", input, output);
-        BatchTask task = new BatchTask(0, 0, server, messages);
-        BatchResult result = task.run();
-        assertThat(result.batchId()).isEqualTo(0);
+        Task task = new Task(0, server, messages);
+        RunResult result = task.run();
         assertThat(result.runId()).isEqualTo(0);
         assertThat(result.requests()).hasSize(1);
         assertThat(result.responses()).hasSize(1);
