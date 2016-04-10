@@ -46,7 +46,7 @@ public class TestRunnerTest {
 
     @Test
     public void it_should_send_same_amount_of_messages_in_constant_load() throws Exception {
-        TestCase testCase = new TestCase(server, messages, CONSTANT_LOAD, 1);
+        TestCase testCase = new TestCase(server, messages, CONSTANT_LOAD, 1, 1);
         TestRunner runner = new TestRunner(testCase);
         List<BatchResult> results = runner.run();
         assertThat(results).hasSize(6);
@@ -66,7 +66,7 @@ public class TestRunnerTest {
 
     @Test
     public void it_should_send_increasing_amount_of_messages_in_incremental_load() throws Exception {
-        TestCase testCase = new TestCase(server, messages, INCREMENTAL_LOAD, 1);
+        TestCase testCase = new TestCase(server, messages, INCREMENTAL_LOAD, 1, 1);
         TestRunner runner = new TestRunner(testCase);
         List<BatchResult> results = runner.run();
         assertThat(results).hasSize(3);
@@ -81,7 +81,7 @@ public class TestRunnerTest {
     @Test
     public void it_should_send_all_messages_in_stress_load() throws Exception {
         Server server = new Server("test", input, output);
-        TestCase testCase = new TestCase(server, messages, STRESS_LOAD, 1);
+        TestCase testCase = new TestCase(server, messages, STRESS_LOAD, 1, 1);
         TestRunner runner = new TestRunner(testCase);
         List<BatchResult> results = runner.run();
         assertThat(results).hasSize(1);

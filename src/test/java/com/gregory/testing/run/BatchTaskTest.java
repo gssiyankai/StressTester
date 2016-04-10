@@ -34,9 +34,10 @@ public class BatchTaskTest {
             }
         };
         Server server = new Server("server", input, output);
-        BatchTask task = new BatchTask(0, server, messages);
+        BatchTask task = new BatchTask(0, 0, server, messages);
         BatchResult result = task.run();
-        assertThat(result.id()).isEqualTo(0);
+        assertThat(result.batchId()).isEqualTo(0);
+        assertThat(result.runId()).isEqualTo(0);
         assertThat(result.requests()).hasSize(1);
         assertThat(result.responses()).hasSize(1);
     }

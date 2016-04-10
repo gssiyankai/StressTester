@@ -12,12 +12,14 @@ public final class TestCase {
     private final List<Message> messages;
     private final TestingStrategy strategy;
     private final int initialBatchSize;
+    private final int runs;
 
-    public TestCase(Server server, List<Message> messages, TestingStrategy strategy, int initialBatchSize) {
+    public TestCase(Server server, List<Message> messages, TestingStrategy strategy, int initialBatchSize, int runs) {
         this.server = server;
         this.messages = messages;
         this.strategy = strategy;
         this.initialBatchSize = initialBatchSize;
+        this.runs = runs;
     }
 
     public Server server() {
@@ -34,6 +36,10 @@ public final class TestCase {
 
     public int initialBatchSize() {
         return initialBatchSize;
+    }
+
+    public int runs() {
+        return runs;
     }
 
 }

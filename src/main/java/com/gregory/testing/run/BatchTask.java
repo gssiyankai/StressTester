@@ -7,20 +7,24 @@ import com.gregory.testing.message.Message;
 import com.gregory.testing.message.TimestampedMessage;
 import com.gregory.testing.result.BatchResult;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 public final class BatchTask {
 
     private final static ExecutorService EXECUTOR_SERVICE = Executors.newFixedThreadPool(2);
 
-    private final int id;
+    private final int batchId;
+    private final int runId;
     private final Server server;
     private final List<Message> messages;
 
-    public BatchTask(int id, Server server, List<Message> messages) {
-        this.id = id;
+    public BatchTask(int batchId, int runId, Server server, List<Message> messages) {
+        this.batchId = batchId;
+        this.runId = runId;
         this.server = server;
         this.messages = messages;
     }
@@ -34,7 +38,7 @@ public final class BatchTask {
         Future<List<TimestampedMessage>> responses = EXECUTOR_SERVICE.submit(consumer);
         Future<List<TimestampedMessage>> requests = EXECUTOR_SERVICE.submit(producer);
 
-        return new BatchResult(id, requests.get(), responses.get());
+        return new BatchResult(batchId, runId, requests.get(), responses.get());
     }
 
 }

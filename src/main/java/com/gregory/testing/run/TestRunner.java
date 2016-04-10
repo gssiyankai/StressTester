@@ -5,7 +5,6 @@ import com.gregory.testing.message.Message;
 import com.gregory.testing.result.BatchResult;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -32,6 +31,7 @@ public final class TestRunner {
 
     private List<BatchResult> runConstantLoad() throws ExecutionException, InterruptedException {
         int batchSize = testCase.initialBatchSize();
+        int runs = testCase.runs();
         Server server = testCase.server();
         List<Message> messages = testCase.messages();
         List<BatchResult> results = new ArrayList<>();
@@ -40,14 +40,18 @@ public final class TestRunner {
         while (messageIndex < messages.size()) {
             List<Message> batchMessages = messages.subList(messageIndex, Math.min(messages.size(), messageIndex + batchSize));
             messageIndex += batchSize;
-            BatchTask task = new BatchTask(batchId++, server, batchMessages);
-            results.add(task.run());
+            for (int runId = 0; runId < runs; runId++) {
+                BatchTask task = new BatchTask(batchId, runId, server, batchMessages);
+                results.add(task.run());
+            }
+            batchId++;
         }
         return results;
     }
 
     private List<BatchResult> runIncrementalLoad() throws ExecutionException, InterruptedException {
         int batchSize = testCase.initialBatchSize();
+        int runs = testCase.runs();
         Server server = testCase.server();
         List<Message> messages = testCase.messages();
         List<BatchResult> results = new ArrayList<>();
@@ -57,18 +61,25 @@ public final class TestRunner {
             List<Message> batchMessages = messages.subList(messageIndex, Math.min(messages.size(), messageIndex + batchSize));
             messageIndex += batchSize;
             batchSize++;
-            BatchTask task = new BatchTask(batchId++, server, batchMessages);
-            results.add(task.run());
+            for (int runId = 0; runId < runs; runId++) {
+                BatchTask task = new BatchTask(batchId, runId, server, batchMessages);
+                results.add(task.run());
+            }
+            batchId++;
         }
         return results;
     }
 
     private List<BatchResult> runStressLoad() throws ExecutionException, InterruptedException {
+        int runs = testCase.runs();
         Server server = testCase.server();
         List<Message> messages = testCase.messages();
-        BatchTask task = new BatchTask(0, server, messages);
-        BatchResult result = task.run();
-        return Collections.singletonList(result);
+        List<BatchResult> results = new ArrayList<>();
+        for (int runId = 0; runId < runs; runId++) {
+            BatchTask task = new BatchTask(0, runId, server, messages);
+            results.add(task.run());
+        }
+        return results;
     }
 
 }

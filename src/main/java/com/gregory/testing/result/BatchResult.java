@@ -6,18 +6,24 @@ import java.util.List;
 
 public final class BatchResult {
 
-    private final int id;
+    private final int batchId;
+    private final int runId;
     private final List<TimestampedMessage> requests;
     private final List<TimestampedMessage> responses;
 
-    public BatchResult(int id, List<TimestampedMessage> requests, List<TimestampedMessage> responses) {
-        this.id = id;
+    public BatchResult(int batchId, int runId, List<TimestampedMessage> requests, List<TimestampedMessage> responses) {
+        this.batchId = batchId;
+        this.runId = runId;
         this.requests = requests;
         this.responses = responses;
     }
 
-    public int id() {
-        return id;
+    public int batchId() {
+        return batchId;
+    }
+
+    public int runId() {
+        return runId;
     }
 
     public List<TimestampedMessage> requests() {
