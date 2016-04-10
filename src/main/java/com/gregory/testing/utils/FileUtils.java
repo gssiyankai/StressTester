@@ -23,7 +23,7 @@ public final class FileUtils {
 
     public static void writeToFile(String path, String content) throws IOException {
         File file = new File(path);
-        file.getParentFile().mkdirs();
+        file.getAbsoluteFile().getParentFile().mkdirs();
         try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file)))) {
             writer.write(content);
         }
