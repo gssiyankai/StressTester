@@ -1,9 +1,6 @@
 package com.gregory.testing.utils;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -29,7 +26,9 @@ public final class FileUtils {
     }
 
     public static void writeToFile(String path, String content) {
-        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(path)))) {
+        File file = new File(path);
+        file.getParentFile().mkdirs();
+        try (PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(file)))) {
             writer.write(content);
         } catch (IOException e) {
             throw new RuntimeException(e);
