@@ -2,6 +2,7 @@ package com.gregory.testing.log;
 
 import com.gregory.testing.message.TimestampedMessage;
 import com.gregory.testing.result.BatchResult;
+import com.gregory.testing.result.Communication;
 import com.gregory.testing.result.RunResult;
 
 import java.io.IOException;
@@ -21,14 +22,10 @@ public final class Logger {
             int batchId = result.batchId();
             for (RunResult runResult : result.runs()) {
                 int runId = runResult.runId();
-                List<TimestampedMessage> requests = runResult.requests();
-                for (TimestampedMessage request : requests) {
-                    builder.append(messageToRow(batchId, runId, "request", request, separator));
-                    builder.append("\n");
-                }
-                List<TimestampedMessage> responses = runResult.responses();
-                for (TimestampedMessage response : responses) {
-                    builder.append(messageToRow(batchId, runId, "response", response, separator));
+                for (Communication communication : runResult.communications()) {
+                    TimestampedMessage request = communication.request();
+                    TimestampedMessage response = communication.response();
+                    builder.append(messageToRow(batchId, runId, request, response, separator));
                     builder.append("\n");
                 }
             }
@@ -36,8 +33,10 @@ public final class Logger {
         writeToFile(path, builder.toString());
     }
 
-    private static String messageToRow(int batchId, int runId, String messageType, TimestampedMessage message, String separator) {
-        return join(separator, batchId, runId, messageType, message.timestamp(), new String(message.message().data()));
+    private static String messageToRow(int batchId, int runId, TimestampedMessage request, TimestampedMessage response, String separator) {
+        return join(separator, batchId, runId,
+                request.timestamp(), new String(request.message().data()),
+                response.timestamp(), new String(response.message().data()));
     }
 
 }

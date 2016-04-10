@@ -5,6 +5,8 @@ import com.gregory.testing.communication.InputChannel;
 import com.gregory.testing.communication.OutputChannel;
 import com.gregory.testing.message.Message;
 import com.gregory.testing.message.TimestampedMessage;
+import com.gregory.testing.result.Communication;
+import com.gregory.testing.result.MessageResolver;
 import com.gregory.testing.result.RunResult;
 
 import java.util.List;
@@ -20,11 +22,13 @@ public final class Task {
     private final int runId;
     private final Server server;
     private final List<Message> messages;
+    private final MessageResolver messageResolver;
 
-    public Task(int runId, Server server, List<Message> messages) {
+    public Task(int runId, Server server, List<Message> messages, MessageResolver messageResolver) {
         this.runId = runId;
         this.server = server;
         this.messages = messages;
+        this.messageResolver = messageResolver;
     }
 
     public RunResult run() throws ExecutionException, InterruptedException {
@@ -33,10 +37,14 @@ public final class Task {
         Producer producer = new Producer(input, messages);
         Consumer consumer = new Consumer(output, messages.size());
 
-        Future<List<TimestampedMessage>> responses = EXECUTOR_SERVICE.submit(consumer);
-        Future<List<TimestampedMessage>> requests = EXECUTOR_SERVICE.submit(producer);
+        Future<List<TimestampedMessage>> responseFutures = EXECUTOR_SERVICE.submit(consumer);
+        Future<List<TimestampedMessage>> requestFutures = EXECUTOR_SERVICE.submit(producer);
 
-        return new RunResult(runId, requests.get(), responses.get());
+        List<TimestampedMessage> requests = requestFutures.get();
+        List<TimestampedMessage> responses = responseFutures.get();
+        List<Communication> communications = messageResolver.resolve(requests, responses);
+
+        return new RunResult(runId, communications);
     }
 
 }

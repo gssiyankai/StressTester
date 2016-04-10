@@ -3,6 +3,7 @@ package com.gregory.testing.run;
 import com.gregory.testing.application.Server;
 import com.gregory.testing.message.Message;
 import com.gregory.testing.result.BatchResult;
+import com.gregory.testing.result.MessageResolver;
 import com.gregory.testing.result.RunResult;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public final class TestRunner {
         int runs = testCase.runs();
         Server server = testCase.server();
         List<Message> messages = testCase.messages();
+        MessageResolver messageResolver = testCase.messageResolver();
         List<BatchResult> batchResults = new ArrayList<>();
         int batchId = 0;
         int messageIndex = 0;
@@ -44,7 +46,7 @@ public final class TestRunner {
             messageIndex += batchSize;
             List<RunResult> runResults = new ArrayList<>();
             for (int runId = 0; runId < runs; runId++) {
-                Task task = new Task(runId, server, batchMessages);
+                Task task = new Task(runId, server, batchMessages, messageResolver);
                 runResults.add(task.run());
             }
             batchResults.add(new BatchResult(batchId++, runResults));
@@ -57,6 +59,7 @@ public final class TestRunner {
         int runs = testCase.runs();
         Server server = testCase.server();
         List<Message> messages = testCase.messages();
+        MessageResolver messageResolver = testCase.messageResolver();
         List<BatchResult> batchResults = new ArrayList<>();
         int batchId = 0;
         int messageIndex = 0;
@@ -66,7 +69,7 @@ public final class TestRunner {
             batchSize++;
             List<RunResult> runResults = new ArrayList<>();
             for (int runId = 0; runId < runs; runId++) {
-                Task task = new Task(runId, server, batchMessages);
+                Task task = new Task(runId, server, batchMessages, messageResolver);
                 runResults.add(task.run());
             }
             batchResults.add(new BatchResult(batchId++, runResults));
@@ -78,9 +81,10 @@ public final class TestRunner {
         int runs = testCase.runs();
         Server server = testCase.server();
         List<Message> messages = testCase.messages();
+        MessageResolver messageResolver = testCase.messageResolver();
         List<RunResult> runResults = new ArrayList<>();
         for (int runId = 0; runId < runs; runId++) {
-            Task task = new Task(runId, server, messages);
+            Task task = new Task(runId, server, messages, messageResolver);
             runResults.add(task.run());
         }
         return Collections.singletonList(new BatchResult(0, runResults));

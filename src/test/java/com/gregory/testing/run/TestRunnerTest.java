@@ -6,6 +6,8 @@ import com.gregory.testing.communication.OutputChannel;
 import com.gregory.testing.message.Message;
 import com.gregory.testing.message.TimestampedMessage;
 import com.gregory.testing.result.BatchResult;
+import com.gregory.testing.result.MessageResolver;
+import com.gregory.testing.result.RegexpMessageResolver;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -24,6 +26,8 @@ public class TestRunnerTest {
                     new Message("hallo".getBytes()),
                     new Message("hej".getBytes()),
                     new Message("ciao".getBytes()));
+    private static final MessageResolver messageResolver =
+            new RegexpMessageResolver("(.*)", "$1", "(.*)", "$1");
 
     private final InputChannel input = new InputChannel() {
         int timestamp = 0;
@@ -46,7 +50,7 @@ public class TestRunnerTest {
 
     @Test
     public void it_should_send_same_amount_of_messages_in_constant_load() throws Exception {
-        TestCase testCase = new TestCase(server, messages, CONSTANT_LOAD, 1, 1);
+        TestCase testCase = new TestCase(server, messages, messageResolver, CONSTANT_LOAD, 1, 1);
         TestRunner runner = new TestRunner(testCase);
         List<BatchResult> results = runner.run();
         assertThat(results).hasSize(6);
@@ -54,14 +58,13 @@ public class TestRunnerTest {
             assertThat(results.get(i).batchId()).isEqualTo(i);
             assertThat(results.get(i).runs()).hasSize(1);
             assertThat(results.get(i).runs().get(0).runId()).isEqualTo(0);
-            assertThat(results.get(i).runs().get(0).requests()).hasSize(1);
-            assertThat(results.get(i).runs().get(0).responses()).hasSize(1);
+            assertThat(results.get(i).runs().get(0).communications()).hasSize(1);
         }
     }
 
     @Test
     public void it_should_send_increasing_amount_of_messages_in_incremental_load() throws Exception {
-        TestCase testCase = new TestCase(server, messages, INCREMENTAL_LOAD, 1, 1);
+        TestCase testCase = new TestCase(server, messages, messageResolver, INCREMENTAL_LOAD, 1, 1);
         TestRunner runner = new TestRunner(testCase);
         List<BatchResult> results = runner.run();
         assertThat(results).hasSize(3);
@@ -69,23 +72,21 @@ public class TestRunnerTest {
             assertThat(results.get(i).batchId()).isEqualTo(i);
             assertThat(results.get(i).runs()).hasSize(1);
             assertThat(results.get(i).runs().get(0).runId()).isEqualTo(0);
-            assertThat(results.get(i).runs().get(0).requests()).hasSize(i + 1);
-            assertThat(results.get(i).runs().get(0).responses()).hasSize(i + 1);
+            assertThat(results.get(i).runs().get(0).communications()).hasSize(i + 1);
         }
     }
 
     @Test
     public void it_should_send_all_messages_in_stress_load() throws Exception {
         Server server = new Server("test", input, output);
-        TestCase testCase = new TestCase(server, messages, STRESS_LOAD, 1, 1);
+        TestCase testCase = new TestCase(server, messages, messageResolver, STRESS_LOAD, 1, 1);
         TestRunner runner = new TestRunner(testCase);
         List<BatchResult> results = runner.run();
         assertThat(results).hasSize(1);
         assertThat(results.get(0).batchId()).isEqualTo(0);
         assertThat(results.get(0).runs()).hasSize(1);
         assertThat(results.get(0).runs().get(0).runId()).isEqualTo(0);
-        assertThat(results.get(0).runs().get(0).requests()).hasSize(6);
-        assertThat(results.get(0).runs().get(0).responses()).hasSize(6);
+        assertThat(results.get(0).runs().get(0).communications()).hasSize(6);
     }
 
 }

@@ -29,6 +29,4 @@ public final class LocalFileSystemTest {
         assertThat(messages.get(2).data()).isEqualTo("Yo!".getBytes());
     }
 
-
-
 }
