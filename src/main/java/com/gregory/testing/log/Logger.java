@@ -6,7 +6,7 @@ import com.gregory.testing.result.BatchResult;
 import java.io.*;
 import java.util.List;
 
-import static com.gregory.testing.utils.Utils.join;
+import static com.gregory.testing.utils.StringUtils.join;
 
 public final class Logger {
 

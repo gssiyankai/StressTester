@@ -1,8 +1,8 @@
 package com.gregory.testing.utils;
 
-public final class Utils {
+public final class StringUtils {
 
-    private Utils() {
+    private StringUtils() {
     }
 
     public static String join(String separator, Object... objects) {
