@@ -1,0 +1,43 @@
+<html>
+<head>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('number', 'batch');
+        data.addColumn('number', 'time');
+        data.addColumn({id:'min', type:'number', role:'interval'});
+        data.addColumn({id:'max', type:'number', role:'interval'});
+        data.addColumn({id:'meanMinusStd', type:'number', role:'interval'});
+        data.addColumn({id:'meanPlusStd', type:'number', role:'interval'});
+
+        data.addRows([
+            ${DATA}
+        ]);
+
+        var options = {
+            title: '${TITLE}',
+            curveType: 'function',
+            series: [{'color': '#D9544C'}],
+            intervals: { style: 'area' },
+            legend: 'none',
+            vAxis: {title: 'Time (ms)'},
+            hAxis: {title: 'Batch', gridlines: {count: data.getNumberOfRows()}},
+            animation: {duration: 1000, easing: 'inAndOut', startup: true},
+        };
+
+        var chart_lines = new google.visualization.LineChart(document.getElementById('chart_lines'));
+        chart_lines.draw(data, options);
+      }
+
+
+
+    </script>
+</head>
+<body>
+<div id="chart_lines" style="width: 1800px; height: 1000px;"></div>
+</body>
+</html>
