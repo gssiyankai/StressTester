@@ -39,6 +39,7 @@ public class KafkaTest {
         Thread.sleep(1000);
         KeyedMessage<String, String> keyedMessage = new KeyedMessage<>(topic, "key", "value");
         kafka.sendMessages(keyedMessage);
+        Thread.sleep(1000);
         TimestampedMessage message = consumer.getMessage();
         assertThat(message.timestamp()).isGreaterThan(startTimestamp);
         assertThat(message.message().data()).isEqualTo("value".getBytes());
