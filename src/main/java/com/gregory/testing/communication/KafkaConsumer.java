@@ -7,8 +7,13 @@ import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import static kafka.consumer.Consumer.createJavaConsumerConnector;
 
@@ -17,7 +22,7 @@ public final class KafkaConsumer implements OutputChannel {
     private final String zookeeper;
     private final String topic;
     private final KafkaStream<byte[], byte[]> stream;
-    private final Queue<TimestampedMessage> queue = new LinkedBlockingQueue<>();
+    private final BlockingQueue<TimestampedMessage> queue = new LinkedBlockingQueue<>();
 
     public KafkaConsumer(String zookeeper, String topic) throws InterruptedException {
         this.zookeeper = zookeeper;
@@ -39,7 +44,11 @@ public final class KafkaConsumer implements OutputChannel {
 
     @Override
     public TimestampedMessage getMessage() {
-        return queue.poll();
+        try {
+            return queue.poll(1, TimeUnit.HOURS);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private class Task implements Runnable {
