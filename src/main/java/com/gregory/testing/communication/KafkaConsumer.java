@@ -8,7 +8,7 @@ import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import static kafka.consumer.Consumer.createJavaConsumerConnector;
 
@@ -17,7 +17,7 @@ public final class KafkaConsumer implements OutputChannel {
     private final String zookeeper;
     private final String topic;
     private final KafkaStream<byte[], byte[]> stream;
-    private final Queue<TimestampedMessage> queue = new ConcurrentLinkedDeque<>();;
+    private final Queue<TimestampedMessage> queue = new LinkedBlockingDeque<>();
 
     public KafkaConsumer(String zookeeper, String topic) throws InterruptedException {
         this.zookeeper = zookeeper;
