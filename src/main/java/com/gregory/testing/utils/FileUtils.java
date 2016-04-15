@@ -2,11 +2,9 @@ package com.gregory.testing.utils;
 
 import java.io.*;
 import java.net.URISyntaxException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import static com.gregory.testing.utils.StringUtils.join;
 
@@ -16,8 +14,11 @@ public final class FileUtils {
     }
 
     public static String readResourceLines(String path) throws URISyntaxException, IOException {
-        Path templatePath = Paths.get(FileUtils.class.getResource("/" + path).toURI());
-        List<String> lines = Files.readAllLines(templatePath, Charset.defaultCharset());
+        List<String> lines = new ArrayList<>();
+        Scanner scanner = new Scanner(FileUtils.class.getResourceAsStream("/" + path));
+        while (scanner.hasNext()) {
+            lines.add(scanner.next());
+        }
         return join("\n", (List) lines);
     }
 
