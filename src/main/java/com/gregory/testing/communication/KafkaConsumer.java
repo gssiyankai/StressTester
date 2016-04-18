@@ -21,22 +21,12 @@ public final class KafkaConsumer implements OutputChannel {
 
     private final String zookeeper;
     private final String topic;
-    private final KafkaStream<byte[], byte[]> stream;
     private final BlockingQueue<TimestampedMessage> queue = new LinkedBlockingQueue<>();
 
     public KafkaConsumer(String zookeeper, String topic) throws InterruptedException {
         this.zookeeper = zookeeper;
         this.topic = topic;
 
-        Properties properties = new Properties();
-        properties.setProperty("group.id", "kafka-consumer");
-        properties.setProperty("zookeeper.connect", zookeeper);
-
-        ConsumerConnector connector = createJavaConsumerConnector(new ConsumerConfig(properties));
-        Map<String, Integer> topicCountMap = new HashMap<>();
-        topicCountMap.put(topic, 1);
-        Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = connector.createMessageStreams(topicCountMap);
-        stream = consumerMap.get(topic).get(0);
         new Thread(new Task()).start();
         Thread.sleep(2500);
         this.queue.clear();
@@ -54,11 +44,23 @@ public final class KafkaConsumer implements OutputChannel {
     private class Task implements Runnable {
         @Override
         public void run() {
-            ConsumerIterator<byte[], byte[]> iterator = stream.iterator();
-            while (iterator.hasNext()) {
-                byte[] data = iterator.next().message();
-                long timestamp = System.currentTimeMillis();
-                queue.add(new TimestampedMessage(timestamp, new Message(data)));
+            while(true) {
+                Properties properties = new Properties();
+                properties.setProperty("group.id", "kafka-consumer");
+                properties.setProperty("zookeeper.connect", zookeeper);
+
+                ConsumerConnector connector = createJavaConsumerConnector(new ConsumerConfig(properties));
+                Map<String, Integer> topicCountMap = new HashMap<>();
+                topicCountMap.put(topic, 1);
+                Map<String, List<KafkaStream<byte[], byte[]>>> consumerMap = connector.createMessageStreams(topicCountMap);
+                KafkaStream<byte[], byte[]> stream = consumerMap.get(topic).get(0);
+
+                ConsumerIterator<byte[], byte[]> iterator = stream.iterator();
+                while (iterator.hasNext()) {
+                    byte[] data = iterator.next().message();
+                    long timestamp = System.currentTimeMillis();
+                    queue.add(new TimestampedMessage(timestamp, new Message(data)));
+                }
             }
         }
     }
