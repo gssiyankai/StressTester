@@ -11,13 +11,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import static kafka.consumer.Consumer.createJavaConsumerConnector;
 
 public final class KafkaConsumer implements OutputChannel {
+
+    private static final ExecutorService executorService = Executors.newCachedThreadPool();
 
     private final String zookeeper;
     private final String topic;
@@ -27,9 +27,7 @@ public final class KafkaConsumer implements OutputChannel {
         this.zookeeper = zookeeper;
         this.topic = topic;
 
-        new Thread(new Task()).start();
-        Thread.sleep(2500);
-        this.queue.clear();
+        executorService.submit(new Task());
     }
 
     @Override
@@ -46,7 +44,8 @@ public final class KafkaConsumer implements OutputChannel {
         public void run() {
             while(true) {
                 Properties properties = new Properties();
-                properties.setProperty("group.id", "kafka-consumer");
+                properties.setProperty("group.id", "kafka-consumer" + System.currentTimeMillis());
+                properties.setProperty("autooffset.reset", "largest");
                 properties.setProperty("zookeeper.connect", zookeeper);
 
                 ConsumerConnector connector = createJavaConsumerConnector(new ConsumerConfig(properties));
