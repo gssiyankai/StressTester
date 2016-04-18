@@ -6,7 +6,10 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 
+import java.util.Date;
 import java.util.Properties;
+
+import static com.gregory.testing.utils.DateUtils.SIMPLE_DATE_FORMAT;
 
 public final class KafkaProducer implements InputChannel {
 
@@ -26,6 +29,7 @@ public final class KafkaProducer implements InputChannel {
                 new org.apache.kafka.clients.producer.KafkaProducer<>(properties, new StringSerializer(), new ByteArraySerializer());
         final ProducerRecord<String, byte[]> record = new ProducerRecord<>(topic, message.data());
         long timestamp = System.currentTimeMillis();
+        System.out.println("@" + SIMPLE_DATE_FORMAT.format(new Date(timestamp)) + " : sending -> " + new String(message.data()));
         producer.send(record);
         return new TimestampedMessage(timestamp, message);
     }

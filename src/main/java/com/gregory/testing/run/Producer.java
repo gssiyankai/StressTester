@@ -22,7 +22,6 @@ public final class Producer implements Callable<List<TimestampedMessage>> {
     public List<TimestampedMessage> call() throws Exception {
         List<TimestampedMessage> requests = new ArrayList<>(messages.size());
         for (Message message : messages) {
-            System.out.println("Sending: " + new String(message.data()));
             TimestampedMessage request = input.sendMessage(message);
             requests.add(request);
         }

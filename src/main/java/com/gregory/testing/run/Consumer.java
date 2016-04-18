@@ -22,7 +22,6 @@ public final class Consumer implements Callable<List<TimestampedMessage>> {
         List<TimestampedMessage> responses = new ArrayList<>(expectedResponses);
         for (int i = 0; i < expectedResponses; i++) {
             TimestampedMessage response = output.getMessage();
-            System.out.println("Received: " + new String(response.message().data()));
             responses.add(response);
         }
         return responses;

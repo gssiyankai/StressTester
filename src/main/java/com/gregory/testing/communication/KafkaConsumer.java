@@ -7,12 +7,10 @@ import kafka.consumer.ConsumerIterator;
 import kafka.consumer.KafkaStream;
 import kafka.javaapi.consumer.ConsumerConnector;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.*;
 
+import static com.gregory.testing.utils.DateUtils.SIMPLE_DATE_FORMAT;
 import static kafka.consumer.Consumer.createJavaConsumerConnector;
 
 public final class KafkaConsumer implements OutputChannel {
@@ -33,7 +31,9 @@ public final class KafkaConsumer implements OutputChannel {
     @Override
     public TimestampedMessage getMessage() {
         try {
-            return queue.poll(1, TimeUnit.HOURS);
+            TimestampedMessage message = queue.poll(1, TimeUnit.HOURS);
+            System.out.println("@" + SIMPLE_DATE_FORMAT.format(new Date(message.timestamp())) +  " : received -> " + new String(message.message().data()));
+            return message;
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
